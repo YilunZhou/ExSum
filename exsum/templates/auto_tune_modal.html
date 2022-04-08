@@ -1,0 +1,133 @@
+<script type="text/javascript">
+  function updateTargetVal() {
+    if(document.getElementById('at_whole').checked) {
+      if(document.getElementById('at_cov').checked) {
+        document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.whole_metrics[0] }}
+      } else if(document.getElementById('at_val').checked) {
+        document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.whole_metrics[1] }}
+      } else if(document.getElementById('at_shp').checked) {
+        document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.whole_metrics[2] }}
+      }
+    } else if (document.getElementById('at_selected').checked) {
+      if(document.getElementById('at_cov').checked) {
+        document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.selected_metrics[0] }}
+      } else if(document.getElementById('at_val').checked) {
+        document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.selected_metrics[1] }}
+      } else if(document.getElementById('at_shp').checked) {
+        document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.selected_metrics[2] }}
+      }
+    }
+  }
+</script>
+
+<div class="modal fade" id="autoTuneModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">AutoTune Configuration</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/auto_tune" method="get" id="at_form" autocomplete="off">
+          <input type='hidden' id='at_func_type' name='func_type' value='null'>
+          <input type='hidden' id='at_param_idx' name='param_idx' value='null'>
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Start Value</label>
+            <div class="col-sm-7">
+              <input type="text" name="start_val" class="form-control form-control-sm" id="at_start">
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Stop Value</label>
+            <div class="col-sm-7">
+              <input type="text" name="stop_val" class="form-control form-control-sm" id="at_stop">
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Search Method</label>
+            <div class="col-sm-3" style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;" >
+              <input class="form-check-input" type="radio" name="search_radio" value="linear" id="at_linear" checked>
+              <label class="form-check-label" for="at_linear">
+                Linear
+              </label>
+            </div>
+            <div class="col-sm-3"  style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;">
+              <input class="form-check-input" type="radio" name="search_radio" value="binary" id="at_binary">
+              <label class="form-check-label" for="at_binary">
+                Binary
+              </label>
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Precision</label>
+            <div class="col-sm-7">
+              <input type="text" name="precision" class="form-control form-control-sm" id="at_precision" value="0.01">
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Target Metric</label>
+            <div class="col-sm-2" style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;" >
+              <input class="form-check-input" type="radio" name="metric_radio" value="cov" id="at_cov"
+                onclick="updateTargetVal()" checked>
+              <label class="form-check-label" for="at_cov">
+                Cov
+              </label>
+            </div>
+            <div class="col-sm-2" style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;" >
+              <input class="form-check-input" type="radio" name="metric_radio" value="val" id="at_val"
+                onclick="updateTargetVal()">
+              <label class="form-check-label" for="at_val">
+                Val
+              </label>
+            </div>
+            <div class="col-sm-2" style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;" >
+              <input class="form-check-input" type="radio" name="metric_radio" value="shp" id="at_shp"
+                onclick="updateTargetVal()">
+              <label class="form-check-label" for="at_shp">
+                Shp
+              </label>
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Target Metric For</label>
+            <div class="col-sm-3" style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;" >
+              <input class="form-check-input" type="radio" name="for_radio" value="whole" id="at_whole"
+                onclick="updateTargetVal()">
+              <label class="form-check-label" for="at_whole">
+                Rule Union
+              </label>
+            </div>
+            <div class="col-sm-4" style="padding-top: 6.625px !important; padding-bottom: 6.625px !important;" >
+              <input class="form-check-input" type="radio" name="for_radio" value="selected" id="at_selected"
+                onclick="updateTargetVal()" checked>
+              <label class="form-check-label" for="at_selected">
+                Selected Rule
+              </label>
+            </div>
+          </div>
+
+          <div class="row mb-1">
+            <label class="col-sm-5 col-form-label">Target (Minimum) Value</label>
+            <div class="col-sm-7">
+              <input type="text" name="target_val" class="form-control form-control-sm" id="at_metric_val">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" form="at_form" class="btn btn-primary" onclick="
+          var el = document.getElementById('blockingModal');
+          bootstrap.Modal.getOrCreateInstance(el).show();
+          document.getElementById('at_cancel_btn').click();
+          return true;
+        ">Start AutoTune</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id='at_cancel_btn'>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

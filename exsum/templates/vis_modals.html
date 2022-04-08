@@ -1,0 +1,116 @@
+{% for data, y_str in ui_data.sent_data %}
+  <div class="modal fade" id="sent_{{ loop.index0 }}_Modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="noRuleSelectedWarningLabel">Example Inspection  {{ y_str|safe }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope='col'>Index</th>
+                <th scope='col'>Word</th>
+                {% for fidx in range(data[0][1].__len__()) %}
+                  <th scope='col'>Feature {{ fidx + 1 }}</th>
+                {% endfor %}
+                <th scope='col'>Attribution</th>
+                {% set _, _, exp_vals = zip(*data) %}
+                {% set minn = min_str("0", min_str(*exp_vals)) %}
+                {% set maxx = max_str("0", max_str(*exp_vals)) %}
+                <th scope='col' width=200>
+                  <span style="float: left">{{ minn }}</span>
+                  <span style="float: right">{{ maxx }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for feu in data %}
+                {% set word, features, exp_val = feu %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ remove_tooltip(word)|safe }}</td>
+                  {% for f in features %}
+                    <td>{{ f|safe }}</td>
+                  {% endfor %}
+                  <td>{{ exp_val|safe }}</td>
+                  <td>
+                    <svg width="100%" viewBox="0 0 500 50">
+                      {% set bar_x, bar_width, color = calc_bar(minn, maxx, 500, exp_val) %}
+                      <rect x="{{ bar_x }}" y="15" width="{{ bar_width }}" height="20" style="fill: {{ color }}" />
+                    </svg>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+{% for data, y_str, sel_idx in ui_data.feu_data %}
+  <div class="modal fade" id="feu_{{ loop.index0 }}_Modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="noRuleSelectedWarningLabel">Example Inspection  {{ y_str|safe }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope='col'>Index</th>
+                <th scope='col'>Word</th>
+                {% for fidx in range(data[0][1].__len__()) %}
+                  <th scope='col'>Feature {{ fidx + 1 }}</th>
+                {% endfor %}
+                <th scope='col'>Attribution</th>
+                {% set _, _, exp_vals = zip(*data) %}
+                {% set minn = min_str("0", min_str(*exp_vals)) %}
+                {% set maxx = max_str("0", max_str(*exp_vals)) %}
+                <th scope='col' width=200>
+                  <span style="float: left">{{ minn }}</span>
+                  <span style="float: right">{{ maxx }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for feu in data %}
+                {% if loop.index0 == sel_idx %}
+                  {% set bg = 'rgba(0, 0, 0, 0.05)' %}
+                {% else %}
+                  {% set bg = 'white' %}
+                {% endif %}
+                {% set word, features, exp_val = feu %}
+                <tr style="background-color: {{ bg }};">
+                  <td>{{ loop.index }}</td>
+                  <td>{{ remove_tooltip(word)|safe }}</td>
+                  {% for f in features %}
+                    <td>{{ f|safe }}</td>
+                  {% endfor %}
+                  <td>{{ exp_val|safe }}</td>
+                  <td>
+                    <svg width="100%" viewBox="0 0 500 50">
+                      {% set bar_x, bar_width, color = calc_bar(minn, maxx, 500, exp_val) %}
+                      <rect x="{{ bar_x }}" y="15" width="{{ bar_width }}" height="20" style="fill: {{ color }}" />
+                    </svg>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}

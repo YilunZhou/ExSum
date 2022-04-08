@@ -1,0 +1,20 @@
+<div class='row'>
+  {% for v in ui_data.sentence_vis %}
+    {% if loop.index0 % 2 == 0 %}
+      {% set sty = "background-color: rgba(0, 0, 0, 0.05)" %}
+    {% else %}
+      {% set sty = "" %}
+    {% endif %}
+    <div style="{{ sty|safe }}"
+      onclick="
+        var el = document.getElementById('sent_{{ loop.index0 }}_Modal');
+        bootstrap.Modal.getOrCreateInstance(el).show();
+        return true;
+      "
+    >
+      <p class='mb-1'>
+        {{ v|safe }}
+      </p>
+    </div>
+  {% endfor %}
+</div>

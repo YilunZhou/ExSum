@@ -1,0 +1,48 @@
+<div class="col-4">
+  {% if ui_data.vis_mode == 'selected' %}
+    {% set txt = 'Rule Union ⟷ <b>Selected Rule</b>' %}
+  {% else %}
+    {% set txt = '<b>Rule Union</b> ⟷ Selected Rule' %}
+  {% endif %}
+  {% if ui_data.vis_mode == 'selected' or ui_data.selected_rule is not none %}
+    <a href='/overall_selected' class="btn btn-outline-primary btn-sm"
+       style='width: 100%'
+       onclick="
+         var el = document.getElementById('blockingModal');
+         bootstrap.Modal.getOrCreateInstance(el).show();
+         return true;
+       ">
+      {{ txt|safe }}
+    </a>
+  {% else %}
+    <button type="button" class="btn btn-outline-primary btn-sm"
+            data-bs-toggle="modal" data-bs-target="#noRuleSelectedWarning" style='width: 100%'>
+      {{ txt|safe }}
+    </button>
+  {% endif %}
+</div>
+<div class="col-4">
+  {% if ui_data.vis_level == 'sentence' %}
+    {% set txt = '<b>Sentence</b> ⟷ FEU' %}
+  {% else %}
+    {% set txt = 'Sentence ⟷ <b>FEU</b>' %}
+  {% endif %}
+  <a href='/sentence_feu' class="btn btn-outline-primary btn-sm"
+     style='width: 100%'
+     onclick="
+       var el = document.getElementById('blockingModal');
+       bootstrap.Modal.getOrCreateInstance(el).show();
+       return true;
+     ">
+    {{ txt|safe }}
+  </a>
+</div>
+<div class="col-4">
+  <a class="btn btn-outline-primary btn-sm" href='/refresh'
+    style='width: 100%'
+    onclick="
+      var el = document.getElementById('blockingModal');
+      bootstrap.Modal.getOrCreateInstance(el).show();
+      return true;
+    ">New Examples</a>
+</div>

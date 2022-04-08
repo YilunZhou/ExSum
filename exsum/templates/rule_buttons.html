@@ -1,0 +1,18 @@
+{% for idx, rule in ui_data.model.rule_union.get_rules().items() %}
+  <div class="row" style="padding-left: 20px;">
+    {% if idx == ui_data.selected_rule %}
+      {% set color = "btn-primary" %}
+    {% else %}
+      {% set color = "btn-outline-primary" %}
+    {% endif %}
+    <a href='/select_rule/{{ idx }}' class="btn {{ color }} text-wrap mt-2 btn-sm"
+      style="text-align: left !important;" 
+      onclick="
+        var el = document.getElementById('blockingModal'); 
+        bootstrap.Modal.getOrCreateInstance(el).show();
+        return true;
+      ">
+      Rule {{ idx }}: {{ rule['name'] }}
+    </a>
+  </div>
+{% endfor %}

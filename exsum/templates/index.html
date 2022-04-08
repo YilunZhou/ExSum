@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plotly-2.4.2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <script language='javaScript' type="text/javascript">
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+    </script>
+
+    <title>ExSum Inspection</title>
+
+    <style>
+      html {
+        font-size: 15px;
+        line-height: 1.1;
+      }
+      .modebar{
+        display: none !important;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <script type="text/javascript">
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.beginPath();
+        this.moveTo(x+r, y);
+        this.arcTo(x+w, y,   x+w, y+h, r);
+        this.arcTo(x+w, y+h, x,   y+h, r);
+        this.arcTo(x,   y+h, x,   y,   r);
+        this.arcTo(x,   y,   x+w, y,   r);
+        this.closePath();
+        return this;
+      }
+    </script>
+
+
+
+    {% include "blocking_modal.html" %}
+    {% include "param_out_of_range_modal.html" %}
+    {% include "auto_tune_modal.html" %}
+
+
+    <h3 style="text-align: center; margin-bottom: 5px; margin-top: 10px;">ExSum Inspection</h3>
+
+    <div class="container-fluid mb-3">
+      <div class="row" style="padding-left: 20px; padding-right: 20px;
+                              margin-bottom: 10px !important; ">
+        {% set msg = ui_data.get_msg() %}
+        {% if msg is not none %}
+          {% if msg[0] == 'E' %}
+            <div class="alert alert-danger" role="alert"
+              style="padding-top: 1px !important; padding-bottom: 1px !important; margin-bottom: 5px !important;">
+              {{ msg[2:] }}
+            </div>
+          {% elif msg[0] == 'S' %}
+            <div class="alert alert-success" role="alert"
+              style="padding-top: 1px !important; padding-bottom: 1px !important; margin-bottom: 5px !important;">
+              {{ msg[2:] }}
+            </div>
+          {% endif %}
+        {% endif %}
+        {% include "rule_formula.html" %}
+      </div>
+
+      <div class="row">
+        <div class="col-6 px-4">
+          <div class="row">
+            <div class="col-5">
+              <div class='row'>
+                <h6 class="mb-2 text-center">Rule Selection</h6>
+                {% include "rule_buttons.html" %}
+                {% include "control_buttons.html" %}
+              </div>
+            </div>
+
+            <div class="col-7">
+              <div class='row'>
+                <h6 style="text-align: center; ">Metric Values</h6>
+                {%include "metric_table.html" %}
+              </div>
+              <div class='row'>
+                {% include "metric_plot.html" %}
+              </div>
+              <div class='row mt-4'>
+                <h6 style="text-align: center;">Parameter Values</h6>
+                {% include "parameter_sliders.html" %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 px-3">
+          <div class='row mb-2 px-3' style='padding-left: 0px !important'>
+            <h6 class='text-center'>Example Visualization</h6>
+            {% if ui_data.vis_level == "sentence" %}
+              {% include "sentence_vis_buttons.html" %}
+            {% else %}
+              {% include "feu_vis_buttons.html" %}
+            {% endif %}
+          </div>
+          <div class='row'>
+            {% if ui_data.vis_level == "sentence" %}
+              {% include "sentence_vis.html" %}
+            {% else %}
+              {% include "feu_vis.html" %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "no_rule_selected_modal.html" %}
+    {% include "vis_modals.html" %}
+
+  </body>
+</html>

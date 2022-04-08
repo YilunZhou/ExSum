@@ -1,0 +1,45 @@
+<table class="table table-borderless table-striped table-sm" style="font-size: 14px">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 25%">Metrics</th>
+      {% if ui_data.selected_rule is none %}
+        <th scope="col" style="width: 35%"><span style="color: #1f77b4">Rule Union</span></th>
+      {% else %}
+        <th scope="col" style="width: 35%"><span style="color: #ff7f0e">CF</span> &nbsp;&nbsp;&nbsp;&nbsp; ⟶ <span style="color: #1f77b4">Full</span></th>
+      {% endif %}
+      <th scope="col" style="width: 40%"><span style="color: #1f77b4">Selected</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Coverage</td>
+      {% if ui_data.selected_rule is none %}
+        <td>{{ '%0.3f' % ui_data.whole_metrics[0] }}</td>
+        <td>(No Rule Selected)</td>
+      {% else %}
+        <td>{{ '%0.3f' % ui_data.cf_metrics[0] }} ⟶ {{ '%0.3f' % ui_data.whole_metrics[0] }}</td>
+        <td>{{ '%0.3f' % ui_data.selected_metrics[0] }}</td>
+      {% endif %}
+    </tr>
+    <tr>
+      <td>Validity</td>
+      {% if ui_data.selected_rule is none %}
+        <td>{{ '%0.3f' % ui_data.whole_metrics[1] }}</td>
+        <td>(No Rule Selected)</td>
+      {% else %}
+        <td>{{ '%0.3f' % ui_data.cf_metrics[1] }} ⟶ {{ '%0.3f' % ui_data.whole_metrics[1] }}</td>
+        <td>{{ '%0.3f' % ui_data.selected_metrics[1] }}</td>
+      {% endif %}
+    </tr>
+    <tr>
+      <td>Sharpness</td>
+      {% if ui_data.selected_rule is none %}
+        <td>{{ '%0.3f' % ui_data.whole_metrics[2] }}</td>
+        <td>(No Rule Selected)</td>
+      {% else %}
+        <td>{{ '%0.3f' % ui_data.cf_metrics[2] }} ⟶ {{ '%0.3f' % ui_data.whole_metrics[2] }}</td>
+        <td>{{ '%0.3f' % ui_data.selected_metrics[2] }}</td>
+      {% endif %}
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,126 @@
+<script type="text/javascript">
+  function validate_and_update_param(field, typ, idx, lo, hi) {
+    if(isNaN(field.value)) {
+      var el = document.getElementById('paramOORModal');
+      bootstrap.Modal.getOrCreateInstance(el).show();
+      document.getElementById('oor_div').innerHTML = 'The requested parameter value of &quot;' + field.value +
+      '&quot; is not a valid number.';
+      field.value = field.nextElementSibling.value;
+    } else if(field.value < lo || field.value > hi){
+      var el = document.getElementById('paramOORModal');
+      bootstrap.Modal.getOrCreateInstance(el).show();
+      document.getElementById('oor_div').innerHTML = 'The requested parameter value of ' + field.value +
+      ' is outside of the allowable range of ' + lo + ' to ' + hi + '.';
+      field.value = field.nextElementSibling.value;
+    } else if(field.value != field.nextElementSibling.value) {
+      field.nextElementSibling.value = field.value;
+      var el = document.getElementById('blockingModal');
+      bootstrap.Modal.getOrCreateInstance(el).show();
+      window.location.href = '/update_param/' + typ + '/' + idx + '/' + field.value;
+    }
+  }
+</script>
+
+{% if ui_data.selected_rule is none %}
+  <p style="text-align: center">(No Rule Selected)</p>
+{% else %}
+  <div class='col-6 px-4' style='font-size: 14px;'>
+    <div class='row text-center mb-3'>
+      Applicability Function Parameters
+    </div>
+    {% if ui_data.model.rule_union.rules[ui_data.selected_rule]['a_params'] |length ==0 %}
+    <div class='row mb-3'>
+      <p style="margin-left: -10px"> (None) <p>
+    </div>
+    {% else %}
+      {% for p in ui_data.model.rule_union.rules[ui_data.selected_rule]['a_params'] %}
+        <div class='row mb-3'>
+          <output style="padding-left:2px !important; padding-right:2px !important">
+            {{ p.name }}
+            <button type='button' class='btn btn-link btn-sm' style='float: right; padding: 0px !important'
+             onclick="
+               var el = document.getElementById('autoTuneModal');
+               bootstrap.Modal.getOrCreateInstance(el).show();
+               document.getElementById('at_start').value = {{ p.current_value }};
+               document.getElementById('at_stop').value = {{ p.current_value }};
+               document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.selected_metrics[0] }};
+               document.getElementById('at_func_type').value = 'a';
+               document.getElementById('at_param_idx').value = {{ loop.index0 }};
+            ">AutoTune</button>
+          </output>
+          {% set lo, hi = p.param_range.get_lower_bound(), p.param_range.get_upper_bound() %}
+          <input type='text' class='form-control form-control-sm' value='{{ p.current_value }}'
+          onfocusout="validate_and_update_param(this, 'a', {{ loop.index0 }}, {{ lo }}, {{ hi }})"
+          onkeydown="
+          if(event.keyCode === 13) {
+            this.blur();
+          }">
+          <input type="range" class="form-range" value="{{ p.current_value }}"
+          min="{{ lo }}" max="{{ hi }}" step="{{ (hi - lo) / 200 }}"
+          oninput="this.previousElementSibling.value = this.value"
+          onmouseup="
+            var el = document.getElementById('blockingModal');
+            bootstrap.Modal.getOrCreateInstance(el).show();
+            window.location.href = '/update_param/a/{{ loop.index0 }}/' + this.value
+          "
+          ontouchend="
+            var el = document.getElementById('blockingModal');
+            bootstrap.Modal.getOrCreateInstance(el).show();
+            window.location.href = '/update_param/a/{{ loop.index0 }}/' + this.value
+          ">
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class='col-6 px-4' style="font-size: 14px;">
+    <div class='row text-center mb-3'>
+      Behavior Function Parameters
+    </div>
+    {% if ui_data.model.rule_union.rules[ui_data.selected_rule]['b_params'] |length ==0 %}
+      <div class='row mb-3'>
+        <p style="margin-left: -10px"> (None) <p>
+      </div>
+    {% else %}
+      {% for p in ui_data.model.rule_union.rules[ui_data.selected_rule]['b_params'] %}
+        <div class='row mb-3'>
+          <output style="padding-left:2px !important; padding-right:2px !important">
+            {{ p.name }}
+            <button type='button' class='btn btn-link btn-sm' style='float: right; padding: 0px !important'
+            onclick="
+              var el = document.getElementById('autoTuneModal');
+              bootstrap.Modal.getOrCreateInstance(el).show();
+              document.getElementById('at_start').value = {{ p.current_value }};
+              document.getElementById('at_stop').value = {{ p.current_value }};
+              document.getElementById('at_cov').checked = false;
+              document.getElementById('at_cov').disabled = true;
+              document.getElementById('at_val').checked = true;
+              document.getElementById('at_metric_val').value = {{ '%0.3f' % ui_data.selected_metrics[1] }};
+              document.getElementById('at_func_type').value = 'b';
+              document.getElementById('at_param_idx').value = {{ loop.index0 }};
+          ">AutoTune</button>
+          </output>
+          {% set lo, hi = p.param_range.get_lower_bound(), p.param_range.get_upper_bound() %}
+          <input type='text' class='form-control form-control-sm' value='{{ p.current_value }}'
+          onfocusout="validate_and_update_param(this, 'b', {{ loop.index0 }}, {{ lo }}, {{ hi }})"
+          onkeydown="
+          if(event.keyCode === 13) {
+            this.blur();
+          }">
+          <input type="range" class="form-range" value="{{ p.current_value }}"
+          min="{{ lo }}" max="{{ hi }}" step="{{ (hi - lo) / 200 }}"
+          oninput="this.previousElementSibling.value = this.value"
+          onmouseup="
+            var el = document.getElementById('blockingModal');
+            bootstrap.Modal.getOrCreateInstance(el).show();
+            window.location.href = '/update_param/b/{{ loop.index0 }}/' + this.value
+          "
+          ontouchend="
+            var el = document.getElementById('blockingModal');
+            bootstrap.Modal.getOrCreateInstance(el).show();
+            window.location.href = '/update_param/b/{{ loop.index0 }}/' + this.value
+          ">
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endif %}

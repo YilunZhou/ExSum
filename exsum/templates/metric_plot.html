@@ -1,0 +1,58 @@
+<div class='col-6' style="padding-left: 0px; padding-right: 5px;">
+  <div id='plotly_div_whole' style="width: 100%">
+    <script type="text/javascript">
+      data = [
+        {
+          {% set a, b, c = ui_data.whole_metrics %}
+          r: [{{ a }}, {{ b }}, {{ c }}, {{ a }}], 
+          theta: ['Cov', 'Val', 'Shp', 'Cov'],
+          type: 'scatterpolar', fill: 'none', name: 'Whole', 
+          hovertemplate: 'Whole %{theta}: %{r:.3f}<extra></extra>'
+        },
+        {% if ui_data.selected_rule is not none %}
+          {% set a, b, c = ui_data.cf_metrics %}
+        {
+          r: [{{ a }}, {{ b }}, {{ c }}, {{ a }}], 
+          theta: ['Cov', 'Val', 'Shp', 'Cov'],
+          type: 'scatterpolar', fill: 'none', name: 'CF', 
+          hovertemplate: 'CF %{theta}: %{r:.3f}<extra></extra>', 
+          line: {dash: 'dot'}
+        }
+        {% endif %}
+      ]
+      layout = {
+        height: document.getElementById('plotly_div_whole').clientWidth, 
+        polar: {radialaxis: {visible: false, range: [0, 1]}}, 
+        showlegend: false, font: {size: 10}, 
+        margin: {b: 0, l: 30, r: 30, t: 0}, 
+      }
+    Plotly.newPlot("plotly_div_whole", data, layout, {responsive: true})
+    </script>
+  </div>
+</div>
+<div class='col-6' style="padding-left: 0px; padding-right: 5px;">
+  <div id='plotly_div_selected' style="width: 100%">
+    <script type="text/javascript">
+      data = [
+        {
+          {% if ui_data.selected_rule is not none %}
+            {% set a, b, c = ui_data.selected_metrics %}
+          {% else %}
+            {% set a, b, c = 100, 100, 100 %}
+          {% endif %}
+          r: [{{ a }}, {{ b }}, {{ c }}, {{ a }}], 
+          theta: ['Cov', 'Val', 'Shp', 'Cov'],
+          type: 'scatterpolar', fill: 'none', name: 'Selected', 
+          hovertemplate: 'Selected %{theta}: %{r:.3f}<extra></extra>'
+        },
+      ]
+      layout = {
+        height: document.getElementById('plotly_div_selected').clientWidth, 
+        polar: {radialaxis: {visible: false, range: [0, 1]}}, 
+        showlegend: false, font: {size: 10}, 
+        margin: {b: 0, l: 30, r: 30, t: 0}, 
+      }
+    Plotly.newPlot("plotly_div_selected", data, layout, {responsive: true})
+    </script>
+  </div>
+</div>

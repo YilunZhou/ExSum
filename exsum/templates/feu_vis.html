@@ -1,0 +1,59 @@
+<div class='row'>
+  {% for v in ui_data.feu_vis %}
+    {% if loop.index0 % 2 == 0 %}
+      {% set bg_color = "rgba(0, 0, 0, 0.05)" %}
+    {% else %}
+      {% set bg_color = "white" %}
+    {% endif %}
+    <div style="background-color: {{ bg_color }}"
+      onclick="
+        var el = document.getElementById('feu_{{ loop.index0 }}_Modal');
+        bootstrap.Modal.getOrCreateInstance(el).show();
+        return true;
+      "
+    >
+      <p style="margin-bottom: -8px">{{ v|safe }}</p>
+      <svg width="100%", viewBox="0 0 500 4">
+        <rect x="0" y="1" rx="1" ry="1" width="500" height="2"
+              style="fill: #aaaaaa" />
+        {% set true_e, pred_e, correct = ui_data.feu_exp_1[loop.index0] %}
+        {% for lo, hi in pred_e.lo_hi %}
+          <rect x="{{ lo * 250 + 250 }}" y="1" rx="0" ry="0"
+                width="{{ (hi - lo) * 250 }}" height="2"
+                style="fill: #e6c017" />
+        {% endfor %}
+        {% if correct %}
+          {% set ball_color = '#2fa831' %}
+        {% else %}
+          {% set ball_color = 'red' %}
+        {% endif %}
+        <circle cx="{{ true_e * 250 + 250 }}" cy="2" r="2" fill="{{ ball_color }}" />
+      </svg>
+    </div>
+  {% endfor %}
+</div>
+
+<div class='row mt-2'>
+  {% for true_e, pred_e, correct in ui_data.feu_exp_2 %}
+    <svg width="100%" style='margin-top: 3px' viewBox="0 0 500 4"
+      onclick="
+        var el = document.getElementById('feu_{{ loop.index0 + ui_data.feu_vis.__len__() }}_Modal');
+        bootstrap.Modal.getOrCreateInstance(el).show();
+        return true;
+    ">
+      <rect x="0" y="1" rx="1" ry="1" width="500" height="2"
+            style="fill: #aaaaaa" />
+      {% for lo, hi in pred_e.lo_hi %}
+        <rect x="{{ lo * 250 + 250 }}" y="1" rx="0" ry="0"
+              width="{{ (hi - lo) * 250 }}" height="2"
+              style="fill: #e6c017" />
+      {% endfor %}
+      {% if correct %}
+        {% set ball_color = '#2fa831' %}
+      {% else %}
+        {% set ball_color = 'red' %}
+      {% endif %}
+      <circle cx="{{ true_e * 250 + 250 }}" cy="2" r="2" fill="{{ ball_color }}" />
+    </svg>
+  {% endfor %}
+</div>

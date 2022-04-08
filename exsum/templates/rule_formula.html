@@ -1,0 +1,8 @@
+
+<div class="alert alert-secondary" role="alert"
+  style="padding-top: 1px !important; padding-bottom: 1px !important; margin-bottom: 5px !important;">
+  Rule Union: {{ ui_data.formula }}
+  {% if ui_data.selected_rule is not none %}
+    <br>CF Without Rule {{ ui_data.selected_rule }}: {{ ui_data.cf_formula }}
+  {% endif %}
+</div>
