@@ -2,7 +2,7 @@
 
 ## Overview
 
-The explanation summary (ExSum) framework is a mathematical formalization to quantatively represent and evaluate generalized model understandings derived from local explanations, introduced in the NAACL 2022 paper. This package implements a GUI for the construction and evaluation of generalized model understandings for natural language processing (NLP) models. 
+The explanation summary (ExSum) framework is a mathematical formalization to quantatively represent and evaluate generalized model understandings derived from local explanations, introduced in our NAACL 2022 paper. This package implements a GUI for the construction and evaluation of generalized model understandings for natural language processing (NLP) models. 
 
 ## Usage
 
@@ -13,7 +13,7 @@ This package can be installed via `pip install exsum`. To get started, please re
 The paper can be cited as 
 ```
 @inproceedings{zhou2022exsum,
-    title = {ExSum: The Explanation Summary Framework for Deriving Generalized Model Understandings from Local Explanations},
+    title = {ExSum: From Local Explanations to Model Understanding},
     author = {Zhou, Yilun and Ribeiro, Marco Tulio and Shah, Julie},
     booktitle = {Annual Conference of the North American Chapter of the Association for Computational Linguistics},
     year = {2022},
