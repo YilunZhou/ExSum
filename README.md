@@ -2,7 +2,7 @@
 
 ## Overview
 
-The explanation summary (ExSum) framework is a mathematical formalization to quantatively represent and evaluate generalized model understandings derived from local explanations, introduced in our NAACL 2022 paper. This package implements a GUI for the construction and evaluation of generalized model understandings for natural language processing (NLP) models. 
+The explanation summary (ExSum) framework is a mathematical formalization to quantatively represent and evaluate generalized model understandings derived from local explanations, introduced in our [NAACL 2022 paper](https://arxiv.org/pdf/2205.00130.pdf). This package implements a GUI for the construction and evaluation of generalized model understandings for natural language processing (NLP) models. 
 
 ## Usage
 
